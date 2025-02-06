@@ -8,10 +8,15 @@ sudo apt-get install -y docker.io
 sudo systemctl start docker
 sudo systemctl enable docker
 
+# Get current user reliably
+CURRENT_USER=$(whoami)
+if [ -z "$CURRENT_USER" ]; then
+    echo "Error: Could not determine current user"
+    exit 1
+fi
+
 # Setup Docker permissions
-sudo groupadd docker
-sudo usermod -aG docker $USER
-newgrp - docker
+sudo usermod -aG docker $CURRENT_USER
 
 # Pull Squid image and run container
 docker pull ubuntu/squid:5.2-22.04_beta
